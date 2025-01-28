@@ -1,16 +1,16 @@
-from P15_logging.fbgfgh import pavadinimas
-from P19_db_SQL.uzd_3_P19 import kaina
+"""
+Visi standartiniai veiksmai su db, prijungsim šablone css
+"""
 from models import db, Projektas
 from flask import Flask, render_template, request, redirect, url_for
 
-
 app = Flask(__name__)
 
-# fizines db prijungimas, configas
+# fizinės db prijungimas, configas
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///projektai.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# paleidziam db
+# paleidžiam db
 db.init_app(app)
 with app.app_context():
     db.create_all()
@@ -21,11 +21,10 @@ def home():
     search_text = request.args.get("searchlaukelis")
     if search_text:
         filtered_rows = Projektas.query.filter(Projektas.pavadinimas.ilike(f"{search_text}%"))
-        return render_template("index_css.html", projects=filtered_rows)
+        return render_template("index.html", projects=filtered_rows)
     else:
-        # all_projects = session.query(Projektas).all()
-        all_projects = Projektas.query.all()  # flask-SQLALchemy
-        return render_template("index_css.html", projects=all_projects)
+        all_projects = Projektas.query.all()
+        return render_template("index.html", projects=all_projects)
 
 
 @app.route("/projektas/<int:row_id>")
@@ -37,7 +36,7 @@ def one_project(row_id):
         return f"Projekto su id {row_id} neegzistuoja"
 
 
-@app.route("/projektas/redaguoti/<int:row_id>")
+@app.route("/projektas/redaguoti/<int:row_id>", methods=["get", "post"])
 def update_project(row_id):
     project = Projektas.query.get(row_id)
     if not project:
@@ -52,11 +51,11 @@ def update_project(row_id):
         project.pavadinimas = name
         project.kaina = price
         db.session.commit()
-        return redirect(url_for("home"))  # nukreipimas i home funkcijos endpointa
-        # return redirect(f"/projektas/{row_id}")
+        return redirect(url_for("home"))  # nukreipimas į home funkcijos endpointą
+        # return redirect(f"/projektas/{row_id}")  # variantas nukreipimo į vieno projekto rodymą
 
 
-@app.route("/projektas/trynimas/<int:row_id>")
+@app.route("/projektas/trynimas/<int:row_id>", methods=["POST"])
 def delete_project(row_id):
     project = Projektas.query.get(row_id)
     if not project:
@@ -82,4 +81,4 @@ def create_project():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(port=5001, debug=True)

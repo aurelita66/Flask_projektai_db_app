@@ -1,6 +1,5 @@
 from models import Projektas, db
-from app01 import app
-
+from app import app
 
 with app.app_context():
     projects = [
@@ -34,9 +33,9 @@ with app.app_context():
         Projektas(pavadinimas="Kalvaitis-Kavaliauskas", kaina=985.0),
         Projektas(pavadinimas="Jankauskas, Paulauskas and Kiška", kaina=110.0),
         Projektas(pavadinimas="Narušis, Paulauskas and Stankevičius", kaina=1020.0),
-        Projektas(pavadinimas="Sons and Akelis Inc.", kaina=790.5)
+        Projektas(pavadinimas="Sons and Akelis Inc.", kaina=790.5),
     ]
 
     db.session.add_all(projects)
     db.session.commit()
-    print("Duomenys uzpildyti")
+    print("Duomenys užpildyti")

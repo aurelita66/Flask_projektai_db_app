@@ -12,7 +12,7 @@ class Projektas(db.Model):
     sukurimo_data = db.Column(db.DateTime, default=datetime.datetime.now)
 
     @property
-    def kaina_su_pvm(self):  # paskaiciuojamas virtualus laukas
+    def kaina_su_pvm(self):  # paskaičiuojamas, virtualus laukas
         return round(self.kaina * 1.21, 2)
 
     def __repr__(self):
